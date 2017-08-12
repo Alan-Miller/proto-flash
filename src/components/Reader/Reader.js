@@ -62,7 +62,7 @@ class Reader extends Component {
                 <main>
                     { 
                         !this.state.cards.length ? null : this.state.cards.map((card, indx) => (
-                            <div className="card-container" onClick={(e) => this.flip(e)}>
+                            <div className="card-container" key={indx} onClick={(e) => this.flip(e)}>
                                 <div className="card" key={indx}>
                                     <div className="front face">{ card[0] }</div>
                                     <div className="back face">{ card[1] }</div>
