@@ -6,35 +6,48 @@
 
 :root {
     font-size: 1em;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background-color: #222; 
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', Geneva, Verdana, sans-serif;
+    background-color: #555; 
 }
 
 .main-container {
-     display: flex;  
+    width: 100vw; 
+    height: 100vh; 
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: indianred;
+    overflow: auto;
 }
 
 deck, card {
-    display: block;
+    display: block; 
 }
 
 deck {
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
+    /* width: 100vw;  */
+    /* height: 100vh; */
+    box-sizing: content-box;
+    position: relative;
+    left: calc(50% - 125px);
+    margin: 0; 
     padding: 0;
-    background-color: indianred;
-    display: inline-block;
-    overflow-y: scroll; 
+    /* border: thick solid #333; */
+    display: flex;
+    /* flex-direction: column; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* overflow: auto; */
 }
 
 .card-container {
     position: relative;
+    margin-right: 20px;
     width: 250px;
     height: 350px;
     z-index: 1;
     perspective: 1000; 
-    margin: 30px;
+    /* margin: 50% 0 0 0;  */
 }
 .card-container.flip .card {
      transform: rotateX(180deg) 
@@ -65,4 +78,12 @@ deck {
     color: teal; 
     background-color: whitesmoke; 
     transform: rotateX(180deg);
+}
+
+
+button {
+    position: absolute;
+    margin: 100px;
+    padding: 30px;
+    cursor: pointer;
 }

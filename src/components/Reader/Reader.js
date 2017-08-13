@@ -5,7 +5,14 @@ class Reader extends Component {
     constructor() {
         super()
 
-        this.state = {cards: []}
+        this.state = {
+            cards: ['red', 'green']
+            ,collections: {
+                'All': []
+            }
+            ,deckInPlay: []
+            ,decks: {}
+        }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.flip = this.flip.bind(this)
     }
@@ -19,6 +26,7 @@ class Reader extends Component {
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
+        console.log(this.state.collections.All)
     }
 
     handleDragOver(e) {
@@ -41,25 +49,54 @@ class Reader extends Component {
             let cards = this.state.cards.concat(newCards); // Add newCards to current cards
             localStorage.setItem('cards', JSON.stringify(cards)); // Save to localStorage
             
-            // Save cards to state
-            this.setState({
-                cards: cards
-            })
+            this.addCards(cards)
         }
     }
 
     flip(e) {
         e.stopPropagation();
         const card = e.currentTarget
-        console.log(card)
+        // console.log(card)
         card.classList.toggle('flip');
         // setTimeout(() => {card.classList.remove('flip')}, 1000)
     }
 
+    buildDeck() {
+        const cards = Array.from(arguments).reduce((a, b) => a.concat(b)); // Make array of all decks passed in
+        if (cards.length < 52) {
+            let deck = [];
+            while (deck.length < 52) {
+            deck = deck.concat(this.shuffle(cards))
+            }
+            return deck;
+        }
+        else {
+            return this.shuffle(cards).slice(0, 52);
+        }
+    }
+
+    addCards(cards) {
+        // Save cards to state
+        this.setState({
+            cards: cards
+            ,collections: Object.assign({}, this.state.collections, {'All': cards})
+        })
+    }
+
+    shuffle(deck) {
+      let copy = [...deck];
+      let shuffled = [];
+      while(copy.length) {
+        shuffled.push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0]);
+      }
+      return shuffled;
+    }
+
     render() {
         return (
-            <div className="main-container">
-                <deck className="deck" id="dropZone">
+            <div className="main-container" id="dropZone">
+                <button>Make random deck</button>
+                <deck className="deck">
                     { 
                         !this.state.cards.length ? null : this.state.cards.map((card, indx) => (
                             <div className="card-container" key={indx} onClick={(e) => this.flip(e)}>
