@@ -82,6 +82,11 @@ deck {
     100% {bottom: -100vh; left: 500px; transform: rotateZ(120deg)}
 }
 
+.card-container:nth-child(1) {
+    margin-right: 50px;
+    transform: scale(1.15);
+}
+
 .card {
     width: 250px;
     height: 350px;

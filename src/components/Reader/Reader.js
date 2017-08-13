@@ -107,22 +107,24 @@ class Reader extends Component {
       return shuffled;
     }
 
-    answer(e) {
-        e.stopPropagation();
-    }
-
-    dropCard(e, direction) {
+    dropCard(e, direction, index) {
         e.stopPropagation();
         e.target.parentNode.children[0].style.display = 'none';
         e.target.parentNode.children[1].style.display = 'none';
 
+        const next = document.getElementById('deck').children[index + 1];
+
         const card = e.target.parentNode.parentNode.parentNode;
         card.classList.add(`drop-${direction}`);
         
-        setTimeout(function() {
+        setTimeout(() => {
             card.style.display = 'none';
             card.classList.remove('drop-left');
             card.classList.remove('drop-right');
+            next.style['margin-right'] = '50px';
+            next.style['transform'] = 'scale(1.15)';
+            // next.style['margin-right'] = '50px';
+            // next.classList.add('firstCard');
         }, 400);
         
         this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
@@ -132,18 +134,44 @@ class Reader extends Component {
         let z = Array.from(Array(53).keys()).reverse();
         z.pop();
 
+
         return (
             <div className="main-container" id="dropZone">
-                <div className="button" onClick={() => this.buildDeck(this.state.cards)}>Make random deck</div>
-                <deck className="deck">
+                <div 
+                    className="button" 
+                    onClick={() => this.buildDeck(this.state.cards)}>
+                    
+                    Make random deck
+                </div>
+                
+                <deck id="deck">
                     { 
                         !this.state.deckInPlay.length ? null : this.state.deckInPlay.map((card, index) => (
-                            <div className="card-container" key={index} onClick={(e) => this.flip(e)} style={{'zIndex': Number(z[index])}}>
+                            <div    
+                                key={index}
+                                ref={index}
+                                style={{'zIndex': z[index]}}
+                                className="card-container" 
+                                onClick={(e) => this.flip(e)}>
+                                
                                 <card className="card">
                                     <div className="front face">{ card[0] }</div>
                                     <div className="back face">{ card[1] }
-                                        <div className="right answer" ref="right" onClick={(e) => this.dropCard(e, 'left')}>Right</div>
-                                        <div className="wrong answer" ref="wrong" onClick={(e) => this.dropCard(e, 'right')}>Wrong</div>
+                                        
+                                        <div    
+                                            className="right answer" 
+                                            ref="right" 
+                                            onClick={(e) => this.dropCard(e, 'left', index)}>
+                                            
+                                            Right
+                                        </div>
+                                        <div 
+                                            className="wrong answer" 
+                                            ref="wrong" 
+                                            onClick={(e) => this.dropCard(e, 'right', index)}>
+                                            
+                                            Wrong
+                                        </div>
                                     </div>
                                 </card>
                             </div>
