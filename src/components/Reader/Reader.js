@@ -27,7 +27,6 @@ class Reader extends Component {
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
-        // console.log('All:', this.state.collections.All)
 
         setTimeout(() => {this.buildDeck(this.state.cards);}, 100)
     }
@@ -59,7 +58,6 @@ class Reader extends Component {
     flip(e) {
         e.stopPropagation();
         const card = e.currentTarget;
-
         card.classList.add('flip');
         card.classList.add('fade-in');
     }
@@ -68,6 +66,7 @@ class Reader extends Component {
         [].forEach.call(document.getElementsByClassName('card-container'), (container) => {
             container.style.display = 'flex';
             container.classList.remove('flip');
+            container.classList.remove('fade-in');
         });
         [].forEach.call(document.getElementsByClassName('answer'), (container) => {
             container.style.display = 'flex';
@@ -127,10 +126,6 @@ class Reader extends Component {
         
         setTimeout(() => {
             card.style.display = 'none';
-            // this.flip(e)
-
-            // backFace.children[0].style.display = 'flex';
-            // backFace.children[1].style.display = 'flex';
             card.classList.remove('drop-left');
             card.classList.remove('drop-right');
             if (next) {
