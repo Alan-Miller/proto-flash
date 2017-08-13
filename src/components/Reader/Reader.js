@@ -108,7 +108,8 @@ class Reader extends Component {
         e.target.parentNode.children[0].style.display = 'none';
         e.target.parentNode.children[1].style.display = 'none';
 
-        const next = document.getElementById('deck').children[index + 1];
+        const next = document.getElementById('deck').children.length ? 
+        document.getElementById('deck').children[index + 1] : null;
 
         const card = e.target.parentNode.parentNode.parentNode;
         card.classList.add(`drop-${direction}`);
@@ -117,9 +118,10 @@ class Reader extends Component {
             card.style.display = 'none';
             card.classList.remove('drop-left');
             card.classList.remove('drop-right');
-            next.style['margin-right'] = '50px';
-            next.style['transform'] = 'scale(1.15)';
-            // next.disabled = true;
+            if (next) {
+                next.style['margin-right'] = '50px';
+                next.style['transform'] = 'scale(1.15)';
+            }
         }, 400);
 
         setTimeout(() => {
