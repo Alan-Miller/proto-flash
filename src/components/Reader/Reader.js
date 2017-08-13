@@ -53,31 +53,26 @@ class Reader extends Component {
         const card = e.currentTarget
         console.log(card)
         card.classList.toggle('flip');
-        setTimeout(() => {card.classList.remove('flip')}, 1000)
+        // setTimeout(() => {card.classList.remove('flip')}, 1000)
     }
 
     render() {
         return (
-            <div id="main-container">
-                <main>
+            <div className="main-container">
+                <deck className="deck" id="dropZone">
                     { 
                         !this.state.cards.length ? null : this.state.cards.map((card, indx) => (
                             <div className="card-container" key={indx} onClick={(e) => this.flip(e)}>
-                                <div className="card" key={indx}>
+                                <card className="card" key={indx}>
                                     <div className="front face">{ card[0] }</div>
                                     <div className="back face">{ card[1] }</div>
-                                </div>
+                                </card>
                             </div>
                         )) 
-                    }   
-) 
-                </main>
-                <sidebar>Sidebar
-                    <h2 className="drop-h">Drop zone</h2>
-                    <div id="dropZone"></div>
-                </sidebar>
-            </div>
-        )
+                    }  
+                </deck>
+            </div> 
+        ) 
     }
 }
 
