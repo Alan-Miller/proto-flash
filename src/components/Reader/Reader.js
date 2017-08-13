@@ -119,7 +119,12 @@ class Reader extends Component {
             card.classList.remove('drop-right');
             next.style['margin-right'] = '50px';
             next.style['transform'] = 'scale(1.15)';
+            // next.disabled = true;
         }, 400);
+
+        setTimeout(() => {
+            console.log()
+        }, 1000);
         
         this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
     }
@@ -142,10 +147,10 @@ class Reader extends Component {
                     { 
                         !this.state.deckInPlay.length ? null : this.state.deckInPlay.map((card, index) => (
                             <div    
+                                className="card-container" 
                                 key={index}
                                 ref={index}
                                 style={{'zIndex': z[index]}}
-                                className="card-container" 
                                 onClick={(e) => this.flip(e)}>
                                 
                                 <card className="card">
@@ -172,6 +177,8 @@ class Reader extends Component {
                         ))
                     }  
                 </deck>
+                
+                <barrier className="barrier"></barrier>
             </div> 
         ) 
     }

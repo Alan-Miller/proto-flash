@@ -19,6 +19,7 @@
     background-color: #205860;
     overflow-x: hidden;
     overflow-y: hidden;
+    position: relative;
 }
 
 deck, card {
@@ -32,6 +33,7 @@ deck {
     margin: 0; 
     padding: 0;
     display: flex;
+    /* background-color: orange; */
 }
 
 .card-container {
@@ -39,7 +41,7 @@ deck {
     margin-right: -230px;
     width: 250px;
     height: 350px;
-    /* background-color: yellow; */
+    /* background-color: yellow;  */
     perspective: 1000; 
     display: flex;
     flex-direction: column;
@@ -142,4 +144,15 @@ deck {
     background-color: #994740;
     bottom: -80px;
     display: flex;
+}
+
+barrier {
+    z-index: 100;
+    /* background-color: gray; */
+    opacity: .5;
+    width: 50vw;
+    height: 350px;
+    position: absolute;
+    top: calc(50% - 175px);
+    left: calc(50% + 175px);
 }
