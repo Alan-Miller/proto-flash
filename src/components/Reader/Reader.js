@@ -27,7 +27,6 @@ class Reader extends Component {
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
-        // console.log('All:', this.state.collections.All)
 
         setTimeout(() => {this.buildDeck(this.state.cards);}, 100)
     }
@@ -59,12 +58,20 @@ class Reader extends Component {
     flip(e) {
         e.stopPropagation();
         const card = e.currentTarget;
-
-        card.classList.toggle('flip');
-        card.classList.toggle('fade-in');
+        card.classList.add('flip');
+        card.classList.add('fade-in');
     }
 
     buildDeck() {
+        [].forEach.call(document.getElementsByClassName('card-container'), (container) => {
+            container.style.display = 'flex';
+            container.classList.remove('flip');
+            container.classList.remove('fade-in');
+        });
+        [].forEach.call(document.getElementsByClassName('answer'), (container) => {
+            container.style.display = 'flex';
+        });
+
         const cards = Array.from(arguments).reduce((a, b) => a.concat(b)); // Make array of all decks passed in
         if (!cards.length) return;
         
@@ -113,6 +120,9 @@ class Reader extends Component {
 
         const card = e.target.parentNode.parentNode.parentNode;
         card.classList.add(`drop-${direction}`);
+
+        const backFace = e.target.parentNode;
+
         
         setTimeout(() => {
             card.style.display = 'none';
