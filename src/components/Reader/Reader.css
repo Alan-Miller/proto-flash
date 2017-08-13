@@ -97,8 +97,9 @@ deck {
 }
 .front.face {
     color: whitesmoke;
-    background-color: teal;
+    background-color: indianred;
     border: thick solid whitesmoke;
+    font-size: 1.7rem;
 }
 .back.face {
     /* display: block;   */
@@ -136,7 +137,8 @@ deck {
     transition: opacity .25s ease-in .15s;
 }
 .right {
-    background-color: #399760;
+    background-color: #teal;
+    /* background-color: #399760; */
     top: -80px;
     display: flex;
 }
