@@ -11,6 +11,7 @@ class Reader extends Component {
                 'All': []
             }
             ,deckInPlay: []
+            // ,cardsOutOfPlay: []
             ,decks: {}
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
@@ -26,7 +27,9 @@ class Reader extends Component {
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
-        console.log(this.state.collections.All)
+        // console.log('All:', this.state.collections.All)
+
+        setTimeout(() => {this.buildDeck(this.state.cards);}, 100)
     }
 
     handleDragOver(e) {
@@ -41,7 +44,7 @@ class Reader extends Component {
         reader.readAsText(file); // FileReader reads file and places result on reader.result
  
         reader.onload = () => { // Give FileReader time to finish, then map result
-            let newCards= reader.result.split('\r').map((card, indx) => {
+            let newCards= reader.result.split('\r').map((card, index) => {
                 // Turn each card string into array having a front and back
                 return card.split(/,(.+)/).filter(item => item);
             })
@@ -55,24 +58,31 @@ class Reader extends Component {
 
     flip(e) {
         e.stopPropagation();
-        const card = e.currentTarget
-        // console.log(card)
+        const card = e.currentTarget;
+
+        // console.log('front?', card.children[0])
         card.classList.toggle('flip');
+        card.classList.toggle('fade-in');
+        // card.children[0].classList.toggle('fade-in');
+        // card.children[1].classList.toggle('flip');
         // setTimeout(() => {card.classList.remove('flip')}, 1000)
     }
 
     buildDeck() {
         const cards = Array.from(arguments).reduce((a, b) => a.concat(b)); // Make array of all decks passed in
+        if (!cards.length) return;
+        
+        let deck = [];
         if (cards.length < 52) {
-            let deck = [];
             while (deck.length < 52) {
-            deck = deck.concat(this.shuffle(cards))
+                deck = deck.concat(this.shuffle(cards))
             }
-            return deck;
         }
         else {
-            return this.shuffle(cards).slice(0, 52);
+            deck = this.shuffle(cards).slice(0, 52);
         }
+        this.setDeckInPlay(deck, true);
+        return deck;
     }
 
     addCards(cards) {
@@ -81,6 +91,11 @@ class Reader extends Component {
             cards: cards
             ,collections: Object.assign({}, this.state.collections, {'All': cards})
         })
+    }
+
+    setDeckInPlay(deck, newGame) {
+        this.setState({deckInPlay: deck})
+        if (newGame) this.setState({cardsOutOfPlay: []});
     }
 
     shuffle(deck) {
@@ -92,20 +107,47 @@ class Reader extends Component {
       return shuffled;
     }
 
+    answer(e) {
+        e.stopPropagation();
+    }
+
+    dropCard(e, direction) {
+        e.stopPropagation();
+        e.target.parentNode.children[0].style.display = 'none';
+        e.target.parentNode.children[1].style.display = 'none';
+
+        const card = e.target.parentNode.parentNode.parentNode;
+        card.classList.add(`drop-${direction}`);
+        
+        setTimeout(function() {
+            card.style.display = 'none';
+            card.classList.remove('drop-left');
+            card.classList.remove('drop-right');
+        }, 400);
+        
+        this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
+    }
+
     render() {
+        let z = Array.from(Array(53).keys()).reverse();
+        z.pop();
+
         return (
             <div className="main-container" id="dropZone">
-                <button>Make random deck</button>
+                <div className="button" onClick={() => this.buildDeck(this.state.cards)}>Make random deck</div>
                 <deck className="deck">
                     { 
-                        !this.state.cards.length ? null : this.state.cards.map((card, indx) => (
-                            <div className="card-container" key={indx} onClick={(e) => this.flip(e)}>
-                                <card className="card" key={indx}>
+                        !this.state.deckInPlay.length ? null : this.state.deckInPlay.map((card, index) => (
+                            <div className="card-container" key={index} onClick={(e) => this.flip(e)} style={{'zIndex': Number(z[index])}}>
+                                <card className="card">
                                     <div className="front face">{ card[0] }</div>
-                                    <div className="back face">{ card[1] }</div>
+                                    <div className="back face">{ card[1] }
+                                        <div className="right answer" ref="right" onClick={(e) => this.dropCard(e, 'left')}>Right</div>
+                                        <div className="wrong answer" ref="wrong" onClick={(e) => this.dropCard(e, 'right')}>Wrong</div>
+                                    </div>
                                 </card>
                             </div>
-                        )) 
+                        ))
                     }  
                 </deck>
             </div> 
