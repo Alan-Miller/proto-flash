@@ -26,20 +26,12 @@ deck, card {
 }
 
 deck {
-    /* width: 100vw;  */
-    /* height: 100vh; */
     box-sizing: content-box;
     position: relative;
     left: calc(50% - 125px);
     margin: 0; 
     padding: 0;
-    /* border: thick solid #333; */
     display: flex;
-    /* background-color: green; */
-    /* flex-direction: column; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* overflow: auto; */
 }
 
 .card-container {
@@ -47,10 +39,8 @@ deck {
     margin-right: -230px;
     width: 250px;
     height: 350px;
-    /* background-color: yellow;    */
-    /* z-index: 1; */
+    /* background-color: yellow; */
     perspective: 1000; 
-    /* margin: 50% 0 0 0;  */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -109,7 +99,7 @@ deck {
     border: thick solid whitesmoke;
 }
 .back.face {
-    /* display: block;  */
+    /* display: block;   */
     color: teal; 
     background-color: whitesmoke; 
     transform: rotateX(180deg);

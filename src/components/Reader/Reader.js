@@ -60,12 +60,8 @@ class Reader extends Component {
         e.stopPropagation();
         const card = e.currentTarget;
 
-        // console.log('front?', card.children[0])
         card.classList.toggle('flip');
         card.classList.toggle('fade-in');
-        // card.children[0].classList.toggle('fade-in');
-        // card.children[1].classList.toggle('flip');
-        // setTimeout(() => {card.classList.remove('flip')}, 1000)
     }
 
     buildDeck() {
@@ -123,8 +119,6 @@ class Reader extends Component {
             card.classList.remove('drop-right');
             next.style['margin-right'] = '50px';
             next.style['transform'] = 'scale(1.15)';
-            // next.style['margin-right'] = '50px';
-            // next.classList.add('firstCard');
         }, 400);
         
         this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
