@@ -58,15 +58,17 @@ class Reader extends Component {
     flip(e) {
         e.stopPropagation();
         const card = e.currentTarget;
-        card.classList.add('flip');
+        card.classList.toggle('flip');
         card.classList.add('fade-in');
     }
 
     buildDeck() {
-        [].forEach.call(document.getElementsByClassName('card-container'), (container) => {
+        [].forEach.call(document.getElementsByClassName('card-container'), (container, index) => {
             container.style.display = 'flex';
             container.classList.remove('flip');
             container.classList.remove('fade-in');
+            if (!index) container.style['transform'] = 'scale(1.15)';
+            else container.style['transform'] = 'scale(1)';
         });
         [].forEach.call(document.getElementsByClassName('answer'), (container) => {
             container.style.display = 'flex';
@@ -128,6 +130,10 @@ class Reader extends Component {
             card.style.display = 'none';
             card.classList.remove('drop-left');
             card.classList.remove('drop-right');
+            [].forEach.call(document.getElementById('deck').children, container => {
+                container.style['transform'] = 'scale(1)';
+            })
+
             if (next) {
                 next.style['margin-right'] = '50px';
                 next.style['transform'] = 'scale(1.15)';
