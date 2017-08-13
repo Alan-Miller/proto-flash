@@ -60,22 +60,30 @@ class Reader extends Component {
         e.stopPropagation();
         const card = e.currentTarget;
 
-        card.classList.toggle('flip');
-        card.classList.toggle('fade-in');
+        card.classList.add('flip');
+        card.classList.add('fade-in');
     }
 
     buildDeck() {
+        [].forEach.call(document.getElementsByClassName('card-container'), (container) => {
+            container.style.display = 'flex';
+            container.classList.remove('flip');
+        });
+        [].forEach.call(document.getElementsByClassName('answer'), (container) => {
+            container.style.display = 'flex';
+        });
+
         const cards = Array.from(arguments).reduce((a, b) => a.concat(b)); // Make array of all decks passed in
         if (!cards.length) return;
         
         let deck = [];
-        if (cards.length < 52) {
-            while (deck.length < 52) {
+        if (cards.length < 2) {
+            while (deck.length < 2) {
                 deck = deck.concat(this.shuffle(cards))
             }
         }
         else {
-            deck = this.shuffle(cards).slice(0, 52);
+            deck = this.shuffle(cards).slice(0, 2);
         }
         this.setDeckInPlay(deck, true);
         return deck;
@@ -113,9 +121,16 @@ class Reader extends Component {
 
         const card = e.target.parentNode.parentNode.parentNode;
         card.classList.add(`drop-${direction}`);
+
+        const backFace = e.target.parentNode;
+
         
         setTimeout(() => {
             card.style.display = 'none';
+            // this.flip(e)
+
+            // backFace.children[0].style.display = 'flex';
+            // backFace.children[1].style.display = 'flex';
             card.classList.remove('drop-left');
             card.classList.remove('drop-right');
             if (next) {
