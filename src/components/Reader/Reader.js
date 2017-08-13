@@ -5,7 +5,15 @@ class Reader extends Component {
     constructor() {
         super()
 
-        this.state = {cards: []}
+        this.state = {
+            cards: ['red', 'green']
+            ,collections: {
+                'All': []
+            }
+            ,deckInPlay: []
+            // ,cardsOutOfPlay: []
+            ,decks: {}
+        }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.flip = this.flip.bind(this)
     }
@@ -19,6 +27,9 @@ class Reader extends Component {
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
+        // console.log('All:', this.state.collections.All)
+
+        setTimeout(() => {this.buildDeck(this.state.cards);}, 100)
     }
 
     handleDragOver(e) {
@@ -33,7 +44,7 @@ class Reader extends Component {
         reader.readAsText(file); // FileReader reads file and places result on reader.result
  
         reader.onload = () => { // Give FileReader time to finish, then map result
-            let newCards= reader.result.split('\r').map((card, indx) => {
+            let newCards= reader.result.split('\r').map((card, index) => {
                 // Turn each card string into array having a front and back
                 return card.split(/,(.+)/).filter(item => item);
             })
@@ -41,34 +52,124 @@ class Reader extends Component {
             let cards = this.state.cards.concat(newCards); // Add newCards to current cards
             localStorage.setItem('cards', JSON.stringify(cards)); // Save to localStorage
             
-            // Save cards to state
-            this.setState({
-                cards: cards
-            })
+            this.addCards(cards)
         }
     }
 
     flip(e) {
         e.stopPropagation();
-        const card = e.currentTarget
-        console.log(card)
+        const card = e.currentTarget;
+
         card.classList.toggle('flip');
-        // setTimeout(() => {card.classList.remove('flip')}, 1000)
+        card.classList.toggle('fade-in');
+    }
+
+    buildDeck() {
+        const cards = Array.from(arguments).reduce((a, b) => a.concat(b)); // Make array of all decks passed in
+        if (!cards.length) return;
+        
+        let deck = [];
+        if (cards.length < 52) {
+            while (deck.length < 52) {
+                deck = deck.concat(this.shuffle(cards))
+            }
+        }
+        else {
+            deck = this.shuffle(cards).slice(0, 52);
+        }
+        this.setDeckInPlay(deck, true);
+        return deck;
+    }
+
+    addCards(cards) {
+        // Save cards to state
+        this.setState({
+            cards: cards
+            ,collections: Object.assign({}, this.state.collections, {'All': cards})
+        })
+    }
+
+    setDeckInPlay(deck, newGame) {
+        this.setState({deckInPlay: deck})
+        if (newGame) this.setState({cardsOutOfPlay: []});
+    }
+
+    shuffle(deck) {
+      let copy = [...deck];
+      let shuffled = [];
+      while(copy.length) {
+        shuffled.push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0]);
+      }
+      return shuffled;
+    }
+
+    dropCard(e, direction, index) {
+        e.stopPropagation();
+        e.target.parentNode.children[0].style.display = 'none';
+        e.target.parentNode.children[1].style.display = 'none';
+
+        const next = document.getElementById('deck').children[index + 1];
+
+        const card = e.target.parentNode.parentNode.parentNode;
+        card.classList.add(`drop-${direction}`);
+        
+        setTimeout(() => {
+            card.style.display = 'none';
+            card.classList.remove('drop-left');
+            card.classList.remove('drop-right');
+            next.style['margin-right'] = '50px';
+            next.style['transform'] = 'scale(1.15)';
+        }, 400);
+        
+        this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
     }
 
     render() {
+        let z = Array.from(Array(53).keys()).reverse();
+        z.pop();
+
+
         return (
-            <div className="main-container">
-                <deck className="deck" id="dropZone">
+            <div className="main-container" id="dropZone">
+                <div 
+                    className="button" 
+                    onClick={() => this.buildDeck(this.state.cards)}>
+                    
+                    Make random deck
+                </div>
+                
+                <deck id="deck">
                     { 
-                        !this.state.cards.length ? null : this.state.cards.map((card, indx) => (
-                            <div className="card-container" key={indx} onClick={(e) => this.flip(e)}>
-                                <card className="card" key={indx}>
+                        !this.state.deckInPlay.length ? null : this.state.deckInPlay.map((card, index) => (
+                            <div    
+                                key={index}
+                                ref={index}
+                                style={{'zIndex': z[index]}}
+                                className="card-container" 
+                                onClick={(e) => this.flip(e)}>
+                                
+                                <card className="card">
                                     <div className="front face">{ card[0] }</div>
-                                    <div className="back face">{ card[1] }</div>
+                                    <div className="back face">{ card[1] }
+                                        
+                                        <div    
+                                            className="right answer" 
+                                            ref="right" 
+                                            onClick={(e) => this.dropCard(e, 'left', index)}>
+                                            
+                                            Right
+                                        </div>
+                                        <div 
+                                            className="wrong answer" 
+                                            ref="wrong" 
+                                            onClick={(e) => this.dropCard(e, 'right', index)}>
+                                            
+                                            Wrong
+                                        </div>
+                                    </div>
                                 </card>
                             </div>
-                        )) 
+                        ))
                     }  
                 </deck>
             </div> 
