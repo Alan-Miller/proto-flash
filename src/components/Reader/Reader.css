@@ -63,7 +63,7 @@ deck {
 }
 @keyframes dropLeft {
     0% {bottom: 0; left: 0; transform: rotateZ(0deg)}
-    100% {bottom: -100vh; left: -500px; transform: rotateZ(-120deg)}
+    100% {bottom: -100vh; left: -575px; transform: rotateZ(-120deg)}
 }
 
 .card-container.drop-right {
@@ -71,7 +71,7 @@ deck {
 }
 @keyframes dropRight {
     0% {bottom: 0; left: 0; transform: rotateZ(0deg)}
-    100% {bottom: -100vh; left: 500px; transform: rotateZ(120deg)}
+    100% {bottom: -100vh; left: 575px; transform: rotateZ(120deg)}
 }
 
 .card-container:nth-child(1) {
