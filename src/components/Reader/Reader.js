@@ -6,7 +6,7 @@ class Reader extends Component {
         super()
 
         this.state = {
-            cards: ['red', 'green']
+            cards: []
             ,collections: {
                 'All': []
             }
