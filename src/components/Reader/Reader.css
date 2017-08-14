@@ -38,12 +38,12 @@ deck {
 
 .card-container {
     position: relative;
-    margin-right: -230px;
+    /* display: flex; */
+    /* margin-right: -230px; */
+    /* background-color: yellow;  */
     width: 250px;
     height: 350px;
-    /* background-color: yellow;  */
     perspective: 1000; 
-    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -72,11 +72,6 @@ deck {
 @keyframes dropRight {
     0% {bottom: 0; left: 0; transform: rotateZ(0deg)}
     100% {bottom: -100vh; left: 575px; transform: rotateZ(120deg)}
-}
-
-.card-container:nth-child(1) {
-    margin-right: 50px;
-    transform: scale(1.15);
 }
 
 .card {
@@ -119,6 +114,10 @@ deck {
     border: none;
 }
 
+/* .drop-right .answer, .drop-left .answer {
+    display: none;
+} */
+
 .answer {
     background-color: teal;
     width: 100px;
@@ -138,16 +137,14 @@ deck {
     transition: opacity .25s ease-in .15s;
 }
 .right {
-    background-color: #teal;
+    background-color: teal;
     /* background-color: #399760; */
     top: -80px;
-    display: flex;
 }
 .wrong {
     background-color: indianred;
     /* background-color: #994740; */
     bottom: -80px;
-    display: flex;
 }
 
 barrier {
