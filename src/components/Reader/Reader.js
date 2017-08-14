@@ -86,13 +86,13 @@ class Reader extends Component {
         if (!cards.length) return;
         
         let deck = [];
-        if (cards.length < 8) {
-            while (deck.length < 8) {
+        if (cards.length < 52) {
+            while (deck.length < 52) {
                 deck = deck.concat(this.shuffle(cards))
             }
         }
         else {
-            deck = this.shuffle(cards).slice(0, 8);
+            deck = this.shuffle(cards).slice(0, 52);
         }
         this.setDeckInPlay(deck, true);
         return deck;
