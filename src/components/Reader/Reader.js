@@ -63,13 +63,21 @@ class Reader extends Component {
     }
 
     buildDeck() {
-        [].forEach.call(document.getElementsByClassName('card-container'), (container, index) => {
+        const cardContainers = document.getElementsByClassName('card-container');
+        [].forEach.call(cardContainers, (container, index) => {
             container.style.display = 'flex';
+            container.style['margin-right'] = '-230px';
             container.classList.remove('flip');
             container.classList.remove('fade-in');
             if (!index) container.style['transform'] = 'scale(1.15)';
             else container.style['transform'] = 'scale(1)';
         });
+        // console.log('containers', cardContainers[0].style);
+        // cardContainers[0].style['margin-right'] = '-230px';
+        // for (var i = 0; i < 3; i++) {
+            // cardContainers[i].style['margin-right'] = '-230px';
+            // console.log(cardContainers[i].style)
+        // }
         [].forEach.call(document.getElementsByClassName('answer'), (container) => {
             container.style.display = 'flex';
         });
@@ -78,13 +86,13 @@ class Reader extends Component {
         if (!cards.length) return;
         
         let deck = [];
-        if (cards.length < 52) {
-            while (deck.length < 52) {
+        if (cards.length < 8) {
+            while (deck.length < 8) {
                 deck = deck.concat(this.shuffle(cards))
             }
         }
         else {
-            deck = this.shuffle(cards).slice(0, 52);
+            deck = this.shuffle(cards).slice(0, 8);
         }
         this.setDeckInPlay(deck, true);
         return deck;

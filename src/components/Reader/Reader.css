@@ -84,6 +84,7 @@ deck {
     height: 350px;
     transform-style: preserve-3d;
     transition: transform .15s ease;
+    word-wrap: break-word;
 }
 
 .face {
