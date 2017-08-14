@@ -13,6 +13,7 @@ class Reader extends Component {
             ,deckInPlay: []
             // ,cardsOutOfPlay: []
             ,decks: {}
+            ,firstCardIndex: 0
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.flip = this.flip.bind(this)
@@ -63,22 +64,14 @@ class Reader extends Component {
     }
 
     buildDeck() {
+        this.setState({firstCardIndex: 0})
         const cardContainers = document.getElementsByClassName('card-container');
         [].forEach.call(cardContainers, (container, index) => {
             container.style.display = 'flex';
-            container.style['margin-right'] = '-230px';
             container.classList.remove('flip');
             container.classList.remove('fade-in');
-            if (!index) container.style['transform'] = 'scale(1.15)';
-            else container.style['transform'] = 'scale(1)';
         });
-        // console.log('containers', cardContainers[0].style);
-        // cardContainers[0].style['margin-right'] = '-230px';
-        // for (var i = 0; i < 3; i++) {
-            // cardContainers[i].style['margin-right'] = '-230px';
-            // console.log(cardContainers[i].style)
-        // }
-        [].forEach.call(document.getElementsByClassName('answer'), (container) => {
+        [].forEach.call(document.getElementsByClassName('answer'), container => {
             container.style.display = 'flex';
         });
 
@@ -86,16 +79,33 @@ class Reader extends Component {
         if (!cards.length) return;
         
         let deck = [];
-        if (cards.length < 52) {
-            while (deck.length < 52) {
+        if (cards.length < 4) {
+            while (deck.length < 4) {
                 deck = deck.concat(this.shuffle(cards))
             }
         }
         else {
-            deck = this.shuffle(cards).slice(0, 52);
+            deck = this.shuffle(cards).slice(0, 4);
         }
-        this.setDeckInPlay(deck, true);
+        this.setDeckInPlay(deck);
         return deck;
+    }
+
+    dropCard(e, direction, index) {
+        e.stopPropagation();
+        [].forEach.call(e.target.parentNode.children, button => button.style.display = 'none');
+
+        const card = e.target.parentNode.parentNode.parentNode;
+        card.classList.add(`drop-${direction}`);
+
+        this.setState(Object.assign({}, {firstCardIndex: this.state.firstCardIndex + 1}))
+
+        setTimeout(() => {
+            card.style.display = 'none';
+            card.classList.remove('drop-left', 'drop-right');
+        }, 400);
+
+        this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
     }
 
     addCards(cards) {
@@ -106,9 +116,8 @@ class Reader extends Component {
         })
     }
 
-    setDeckInPlay(deck, newGame) {
+    setDeckInPlay(deck) {
         this.setState({deckInPlay: deck})
-        if (newGame) this.setState({cardsOutOfPlay: []});
     }
 
     shuffle(deck) {
@@ -120,46 +129,21 @@ class Reader extends Component {
       return shuffled;
     }
 
-    dropCard(e, direction, index) {
-        e.stopPropagation();
-        e.target.parentNode.children[0].style.display = 'none';
-        e.target.parentNode.children[1].style.display = 'none';
-
-        const next = document.getElementById('deck').children.length ? 
-        document.getElementById('deck').children[index + 1] : null;
-
-        const card = e.target.parentNode.parentNode.parentNode;
-        card.classList.add(`drop-${direction}`);
-
-        const backFace = e.target.parentNode;
-
-        
-        setTimeout(() => {
-            card.style.display = 'none';
-            card.classList.remove('drop-left');
-            card.classList.remove('drop-right');
-            [].forEach.call(document.getElementById('deck').children, container => {
-                container.style['transform'] = 'scale(1)';
-            })
-
-            if (next) {
-                next.style['margin-right'] = '50px';
-                next.style['transform'] = 'scale(1.15)';
-            }
-        }, 400);
-
-        setTimeout(() => {
-            console.log()
-        }, 1000);
-        
-        this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
-    }
 
     render() {
         let z = Array.from(Array(53).keys()).reverse();
         z.pop();
-
-
+ 
+        const cardContainerStyles = {
+            display: 'flex'
+            ,marginRight: '-230px'
+        }
+        const firstCardContainerStyles = {
+            marginRight: '50px'
+            ,transform: 'scale(1.15)'
+        }
+        let firstIndex = this.state.firstCardIndex;
+        
         return (
             <div className="main-container" id="dropZone">
                 <div 
@@ -175,19 +159,17 @@ class Reader extends Component {
                             <div    
                                 className="card-container" 
                                 key={index}
-                                ref={index}
-                                style={{'zIndex': z[index]}}
+                                style={Object.assign({}, cardContainerStyles, this.state.firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
                                 onClick={(e) => this.flip(e)}>
                                 
                                 <card className="card">
-                                    <div className="front face">{ card[0] }</div>
+                                    <div className="front face">{ card[0] }, index: {index}, firstIndex: {firstIndex}, zIndex: {z[index]}</div>
                                     <div className="back face">{ card[1] }
-                                        
+
                                         <div    
                                             className="right answer" 
                                             ref="right" 
                                             onClick={(e) => this.dropCard(e, 'left', index)}>
-                                            
                                             Right
                                         </div>
                                         <div 
