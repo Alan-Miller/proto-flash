@@ -135,12 +135,12 @@ class Reader extends Component {
         z.pop();
  
         const cardContainerStyles = {
-            display: 'flex'
-            ,marginRight: '-230px'
+            marginRight: '-230px'
+            ,display: 'flex'
         }
         const firstCardContainerStyles = {
             marginRight: '50px'
-            ,transform: 'scale(1.15)'
+            ,transform: 'scale(1)'
         }
         let firstIndex = this.state.firstCardIndex;
         
