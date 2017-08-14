@@ -63,13 +63,21 @@ class Reader extends Component {
     }
 
     buildDeck() {
-        [].forEach.call(document.getElementsByClassName('card-container'), (container, index) => {
+        const cardContainers = document.getElementsByClassName('card-container');
+        [].forEach.call(cardContainers, (container, index) => {
             container.style.display = 'flex';
+            container.style['margin-right'] = '-230px';
             container.classList.remove('flip');
             container.classList.remove('fade-in');
             if (!index) container.style['transform'] = 'scale(1.15)';
             else container.style['transform'] = 'scale(1)';
         });
+        // console.log('containers', cardContainers[0].style);
+        // cardContainers[0].style['margin-right'] = '-230px';
+        // for (var i = 0; i < 3; i++) {
+            // cardContainers[i].style['margin-right'] = '-230px';
+            // console.log(cardContainers[i].style)
+        // }
         [].forEach.call(document.getElementsByClassName('answer'), (container) => {
             container.style.display = 'flex';
         });
